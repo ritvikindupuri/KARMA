@@ -150,27 +150,22 @@ export default function App() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 28, height: 28, flexShrink: 0 }}>
-            <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="14" cy="14" r="11" fill="none" stroke="#326ce5" strokeWidth="2.4"/>
-              <circle cx="14" cy="14" r="11" fill="none" stroke="#3b82f6" strokeWidth="1.4"/>
-              <circle cx="25" cy="14" r="1.5" fill="#326ce5"/>
-              <circle cx="21.78" cy="21.78" r="1.5" fill="#326ce5"/>
-              <circle cx="14" cy="25" r="1.5" fill="#326ce5"/>
-              <circle cx="6.22" cy="21.78" r="1.5" fill="#326ce5"/>
-              <circle cx="3" cy="14" r="1.5" fill="#326ce5"/>
-              <circle cx="6.22" cy="6.22" r="1.5" fill="#326ce5"/>
-              <circle cx="14" cy="3" r="1.5" fill="#326ce5"/>
-              <circle cx="21.78" cy="6.22" r="1.5" fill="#326ce5"/>
-              <g stroke="#326ce5" strokeWidth="0.6">
-                <line x1="14" y1="14" x2="25" y2="14"/>
-                <line x1="14" y1="14" x2="3" y2="14"/>
-                <line x1="14" y1="14" x2="14" y2="25"/>
-                <line x1="14" y1="14" x2="14" y2="3"/>
-                <line x1="14" y1="14" x2="21.78" y2="21.78"/>
-                <line x1="14" y1="14" x2="6.22" y2="6.22"/>
-                <line x1="14" y1="14" x2="6.22" y2="21.78"/>
-                <line x1="14" y1="14" x2="21.78" y2="6.22"/>
-              </g>
+            {/* KARMA "Twin Helm" mark: a Kubernetes heptagon formed by two segments (attack / fix) around the cluster core */}
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KARMA">
+              <defs>
+                <linearGradient id="karmaHelmA" gradientUnits="userSpaceOnUse" x1="30" y1="95" x2="70" y2="5">
+                  <stop offset="0" stopColor="#12307a"/><stop offset="1" stopColor="#326ce5"/>
+                </linearGradient>
+                <linearGradient id="karmaHelmB" gradientUnits="userSpaceOnUse" x1="70" y1="95" x2="30" y2="5">
+                  <stop offset="0" stopColor="#326ce5"/><stop offset="1" stopColor="#22d3ee"/>
+                </linearGradient>
+                <linearGradient id="karmaHelmCore" gradientUnits="userSpaceOnUse" x1="50" y1="38" x2="50" y2="62">
+                  <stop offset="0" stopColor="#1e40af"/><stop offset="1" stopColor="#3b82f6"/>
+                </linearGradient>
+              </defs>
+              <polyline points="71.67,24.44 78.15,27.55 85.10,58.01 65.62,82.43 41.25,82.43" fill="none" stroke="url(#karmaHelmA)" strokeWidth="12.5" strokeLinejoin="miter" strokeMiterlimit="8"/>
+              <polyline points="29.12,75.84 14.90,58.01 21.85,27.55 50.00,14.00 57.88,17.80" fill="none" stroke="url(#karmaHelmB)" strokeWidth="12.5" strokeLinejoin="miter" strokeMiterlimit="8"/>
+              <polygon points="55.21,39.19 61.70,47.33 59.38,57.48 50.00,62.00 40.62,57.48 38.30,47.33 44.79,39.19" fill="url(#karmaHelmCore)"/>
             </svg>
           </div>
           <div>
