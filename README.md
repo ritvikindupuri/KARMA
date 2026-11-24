@@ -1,6 +1,6 @@
 # KARMA — Kubernetes Attack & Remediation Mapping Agent
 
-A pure CLI tool that deploys a real Kind cluster, executes 10 real-world Kubernetes attack techniques mapped to MITRE ATT&CK for Containers, and autonomously remediates them using Claude Sonnet 4 — all with full transparency into every agent's reasoning, commands, and live output streamed to your terminal.
+A CLI-first tool (with an optional FastAPI + React dashboard) that deploys a real Kind cluster, executes 10 real-world Kubernetes attack techniques mapped to MITRE ATT&CK for Containers, and autonomously remediates them using Claude Sonnet 4 — all with full transparency into every agent's reasoning, commands, and live output streamed to your terminal.
 
 
 ---
