@@ -474,6 +474,11 @@ async def root():
 async def websocket_endpoint(websocket: WebSocket):
     await ws_manager.connect(websocket)
     try:
+        try:
+            _info = await cluster_manager.get_cluster_info()
+            await ws_manager.send_to(websocket, {"type": "cluster_info", "data": _info})
+        except Exception:
+            pass
         while True:
             data = await websocket.receive_text()
             try:
