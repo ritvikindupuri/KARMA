@@ -9,32 +9,30 @@ from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
 
+def _kubeconfig_path():
+    """Honor KUBECONFIG so a local lab does not silently target another Kind cluster."""
+    return os.environ.get("KUBECONFIG") or os.path.expanduser("~/.kube/config")
+
+
+def _load_kube_config():
+    # kubernetes-python exposes load_kube_config, not load_kubeconfig.
+    config.load_kube_config(config_file=_kubeconfig_path())
+
+
 def _new_core_api():
     """Create a fresh CoreV1Api client (thread-safe)."""
-    try:
-        config.load_kubeconfig()
-        return client.CoreV1Api()
-    except Exception:
-        config.load_kube_config(config_file=os.path.expanduser("~/.kube/config"))
-        return client.CoreV1Api()
+    _load_kube_config()
+    return client.CoreV1Api()
 
 
 def _new_rbac_api():
-    try:
-        config.load_kubeconfig()
-        return client.RbacAuthorizationV1Api()
-    except Exception:
-        config.load_kube_config(config_file=os.path.expanduser("~/.kube/config"))
-        return client.RbacAuthorizationV1Api()
+    _load_kube_config()
+    return client.RbacAuthorizationV1Api()
 
 
 def _new_apps_api():
-    try:
-        config.load_kubeconfig()
-        return client.AppsV1Api()
-    except Exception:
-        config.load_kube_config(config_file=os.path.expanduser("~/.kube/config"))
-        return client.AppsV1Api()
+    _load_kube_config()
+    return client.AppsV1Api()
 
 
 CLUSTER_NAME = "k8s-attack-lab"
@@ -394,23 +392,11 @@ class ClusterManager:
             return {"ready": False, "error": str(e)}
 
     def _init_k8s_client(self):
-        try:
-            config.load_kubeconfig()
-            self._core_api = client.CoreV1Api()
-            self._rbac_api = client.RbacAuthorizationV1Api()
-            self._apps_api = client.AppsV1Api()
-            self._ready = True
-        except Exception as e:
-            # Try loading from default location
-            kubeconfig_path = os.path.expanduser("~/.kube/config")
-            if os.path.exists(kubeconfig_path):
-                config.load_kube_config(config_file=kubeconfig_path)
-                self._core_api = client.CoreV1Api()
-                self._rbac_api = client.RbacAuthorizationV1Api()
-                self._apps_api = client.AppsV1Api()
-                self._ready = True
-            else:
-                raise Exception(f"Cannot connect to cluster: {e}")
+        _load_kube_config()
+        self._core_api = client.CoreV1Api()
+        self._rbac_api = client.RbacAuthorizationV1Api()
+        self._apps_api = client.AppsV1Api()
+        self._ready = True
 
     def get_api_client(self):
         return client.ApiClient()

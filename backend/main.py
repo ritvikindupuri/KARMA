@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import subprocess
 import sys
 import time
 from typing import Dict, Any
@@ -118,7 +119,28 @@ async def create_cluster():
 
 @app.post("/api/cluster/create-and-attack")
 async def create_cluster_and_attack():
-    result = await cluster_manager.create_cluster()
+    """Create the lab cluster if needed, then run the attack suite.
+    Reuse a healthy existing k8s-attack-lab instead of tearing it down first.
+    """
+    result = None
+    try:
+        existing = await asyncio.to_thread(
+            subprocess.run, ["kind", "get", "clusters"],
+            capture_output=True, text=True, timeout=30,
+        )
+        already = cluster_manager.cluster_name in (existing.stdout or "").split()
+    except Exception:
+        already = False
+    if already:
+        info = await cluster_manager.get_cluster_info()
+        if info.get("ready"):
+            try:
+                await cluster_manager._setup_vulnerable_configs()
+            except Exception:
+                pass
+            result = {"success": True, "reused_existing": True, "name": cluster_manager.cluster_name}
+    if result is None:
+        result = await cluster_manager.create_cluster()
     if result.get("success"):
         await detection_monitor.start_monitoring()
         asyncio.create_task(orchestrator.run_all_attacks())
